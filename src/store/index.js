@@ -176,6 +176,27 @@ export default new Vuex.Store({
         })
         .catch(err => {
           console.log(err)
+          Swal.fire({
+            icon: 'error',
+            text: 'Stock tidak mencukupi'
+          })
+        })
+    },
+
+    deleteCart (context, payload) {
+      axios.delete('/keranjang', { headers: { access_token: localStorage.getItem('access_token') } })
+        .then(data => {
+          Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Basket Emptied!',
+            showConfirmButton: false,
+            timer: 1000
+          })
+          router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   },
