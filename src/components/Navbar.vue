@@ -3,32 +3,31 @@
     <nav>
       <div class="container">
         <ul class="navbar-left">
-          <li><a href="#">Home</a></li>
+          <li><router-link to="/">Home</router-link></li>
         </ul> <!--end navbar-left -->
 
         <ul class="navbar-right">
-          <li><a href="#" id="cart"><i class="fa fa-shopping-cart"></i> Cart <span class="badge">{{cartQty}}</span></a></li>
+          <li><a href="#" id="cart"><i class="fa fa-shopping-cart"></i> Cart <span class="badge">{{totalQty}}</span></a></li>
           <!-- <li><a href="#about">Logout</a></li> -->
           <li @click="logout"><router-link to="Login">Logout</router-link></li>
         </ul> <!--end navbar-right -->
       </div> <!--end container -->
     </nav>
     <div class="container">
-      <div class="shopping-cart">
+      <div class="shopping-cart" style="display:none">
         <div class="shopping-cart-header">
-          <i class="fa fa-shopping-cart cart-icon"></i><span class="badge">{{cartQty}}</span>
-          <div class="shopping-cart-total">
-            <span class="lighter-text">Total:</span>
-            <span class="main-color-text">$2,229.97</span>
-          </div>
+          <!-- <i class="fa fa-shopping-cart cart-icon"></i><span class="badge">{{totalQty}}</span> -->
+          <!-- <div class="shopping-cart-total"> -->
+            <!-- <span class="lighter-text">Total:</span> -->
+            <!-- <span class="main-color-text">$2,229.97</span> -->
+          <!-- </div> -->
         </div> <!--end shopping-cart-header -->
 
-        <ul class="shopping-cart-items">
-          <li class="clearfix">
-            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/cart-item1.jpg" alt="item1" />
-            <span class="item-name">Sony DSC-RX100M III</span>
-            <span class="item-price">$849.99</span>
-            <span class="item-quantity">Quantity: 01</span>
+        <ul>
+          <li v-for="cart in carts" :key="cart.id" class="clearfix">
+            <!-- <img :src="cart.Product.image_url" /> -->
+            <span class="item-name">{{cart.Product.name}}</span>
+            <span class="item-quantity">{{cart.quantity}}</span>
           </li>
           <!-- <li class="clearfix">
             <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/cart-item2.jpg" alt="item1" />
@@ -44,18 +43,26 @@
           </li> -->
         </ul>
 
-        <a href="#" class="button">Checkout</a>
+        <button @click="$router.push('/editcart')" class="button">Edit Cart</button>
       </div> <!--end shopping-cart -->
     </div> <!--end container -->
   </div>
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   name: 'Navbar',
   computed: {
+    carts () {
+      return this.$store.state.cart
+    },
     cartQty () {
       return this.$store.state.cart.length
+    },
+
+    totalQty () {
+      return this.$store.state.totalCart
     }
   },
   created () {
@@ -66,6 +73,11 @@ export default {
       localStorage.removeItem('access_token')
       this.$router.push('/login')
     }
+  },
+  mounted () {
+    $('#cart').on('click', function () {
+      $('.shopping-cart').fadeToggle('fast')
+    })
   }
 }
 </script>

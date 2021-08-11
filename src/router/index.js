@@ -3,9 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
-import EcommercePage from '../views/Test.vue'
-import Test2 from '../views/Test2.vue'
 import NotFound from '../views/NotFound.vue'
+import EditCart from '../views/EditCart.vue'
 
 Vue.use(VueRouter)
 
@@ -34,14 +33,9 @@ const routes = [
     component: Register
   },
   {
-    path: '/test',
-    name: 'EcommercePage',
-    component: EcommercePage
-  },
-  {
-    path: '/test2',
-    name: 'Test2',
-    component: Test2
+    path: '/editcart',
+    name: 'EditCart',
+    component: EditCart
   },
   {
     path: '*',
@@ -57,12 +51,18 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !localStorage.getItem('access_token')) {
-    next({ name: 'Login' })
-  } else if (to.name === 'Login' && localStorage.getItem('access_token')) {
-    next({ name: 'Test2' })
+  if (!localStorage.getItem('access_token')) {
+    if (to.name !== 'Login' && to.name !== 'Register') {
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
   } else {
-    next()
+    if (to.name === 'Login' || to.name === 'Register') {
+      next({ name: 'Home' })
+    } else {
+      next()
+    }
   }
 })
 
